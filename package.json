@@ -1,6 +1,6 @@
 {
   "name": "overlay",
-  "productName": "overlay",
+  "productName": "Overlay",
   "version": "1.0.0",
   "description": "Overlay mockups atop your development builds to reach pixel perfection!",
   "main": ".webpack/main",
@@ -80,6 +80,7 @@
     "style-loader": "^1.2.1"
   },
   "dependencies": {
+    "electron-is-dev": "^1.2.0",
     "electron-squirrel-startup": "^1.0.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",

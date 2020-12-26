@@ -19,7 +19,10 @@ const baseStyle = {
   color: '#ababab',
   outline: 'none',
   transition: 'border .24s ease-in-out',
-  cursor: 'pointer'
+  cursor: 'pointer',
+  height: '200px',
+  fontSize: '24px',
+  justifyContent: 'center'
 };
 
 const img = {
@@ -84,12 +87,23 @@ function App() {
     isDragAccept
   ]);
 
-  ipcRenderer.on('resize', (event, arg) => {
+  ipcRenderer.on('resize', () => {
     const image = document.getElementById('image');
     ipcRenderer.send('resize-main-window', {
       height: image.offsetHeight + TOP_ROW_SPACING,
       width: image.offsetWidth,
     });
+  });
+
+  ipcRenderer.on('setOpacity', (event, arg) => {
+    const image = document.getElementById('image');
+    image.style.opacity = arg;
+  });
+
+  ipcRenderer.on('initialize', () => {
+    setFile([]);
+    setShowDropArea(true);
+    document.body.style.background = '#1a1a1a';
   });
 
   useEffect(() => () => {
@@ -106,11 +120,13 @@ function App() {
           <p>Drop an image here</p>
         </div>
       }
-      <img
-        id="image"
-        src={file.preview}
-        style={img}
-      />
+      {!showDropArea &&
+        <img
+          id="image"
+          src={file.preview}
+          style={img}
+        />
+      }
     </>
   )
 }
