@@ -11,6 +11,10 @@ const createWindow = () => {
   // Create the browser window.
   mainWindow = new BrowserWindow({
     transparent: true,
+    frame: false,
+    titleBarStyle: 'hidden',
+    height: 200,
+    width: 300,
     webPreferences: {
       nodeIntegration: true
     }
@@ -21,6 +25,17 @@ const createWindow = () => {
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools({ mode: 'detach' });
+
+  let timeout = null;
+
+  mainWindow.on('resize', () => {
+    if (!timeout) {
+      timeout = setTimeout(() => {
+        mainWindow.webContents.send('resize');
+        timeout = null;
+      }, 200)
+    }
+  });
 };
 
 // This method will be called when Electron has finished
@@ -46,6 +61,5 @@ app.on('activate', () => {
 });
 
 ipcMain.on('resize-main-window', (event, arg) => {
-  console.log(`Setting window to width ${arg.width} height ${arg.height}`)
   mainWindow.setSize(arg.width, arg.height)
 })
