@@ -1,8 +1,6 @@
-html {
-  box-sizing: border-box;
-}
-
-*, *:before, *:after {
+*,
+*:before,
+*:after {
   box-sizing: inherit;
 }
 
@@ -14,18 +12,20 @@ body {
   width: 100vw;
 }
 
+html {
+  box-sizing: border-box;
+}
+
 body {
   background: #1a1a1a;
   overflow-y: hidden;
 }
 
-/* 
-#root {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  width: 100%;
-} */
+img {
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-drag: none;
+}
 
 #titlebar {
   display: block;

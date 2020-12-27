@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useRef } from 'react';
 import { useDropzone } from 'react-dropzone'
 import { ipcRenderer } from 'electron';
 
@@ -47,6 +47,7 @@ const rejectStyle = {
 function App() {
   const [file, setFile] = useState([]);
   const [showDropArea, setShowDropArea] = useState(true);
+  const imageRef = useRef();
 
   const {
     getRootProps,
@@ -87,17 +88,22 @@ function App() {
     isDragAccept
   ]);
 
-  ipcRenderer.on('resize', () => {
-    const image = document.getElementById('image');
-    ipcRenderer.send('resize-main-window', {
-      height: image.offsetHeight + TOP_ROW_SPACING,
-      width: image.offsetWidth,
-    });
+  let timeout = null;
+
+  window.addEventListener('resize', () => {
+    if (!timeout) {
+      timeout = setTimeout(() => {
+        ipcRenderer.send('resize-main-window', {
+          height: imageRef.current.offsetHeight + TOP_ROW_SPACING,
+          width: imageRef.current.offsetWidth,
+        });
+        timeout = null;
+      }, 500);
+    }
   });
 
   ipcRenderer.on('setOpacity', (event, arg) => {
-    const image = document.getElementById('image');
-    image.style.opacity = arg;
+    imageRef.current.style.opacity = arg;
   });
 
   ipcRenderer.on('initialize', () => {
@@ -122,7 +128,7 @@ function App() {
       }
       {!showDropArea &&
         <img
-          id="image"
+          ref={imageRef}
           src={file.preview}
           style={img}
         />
