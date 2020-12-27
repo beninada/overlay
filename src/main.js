@@ -29,7 +29,23 @@ const createWindow = () => {
 
   var menu = Menu.buildFromTemplate([
     {
-      label: 'Menu'
+      label: 'Menu',
+      submenu: [
+        {
+          label: 'Quit',
+          accelerator: 'CmdOrCtrl+Q',
+          click() { 
+            app.quit();
+          } 
+        },
+        {
+          label: 'Reload',
+          accelerator: 'CmdOrCtrl+R',
+          click() { 
+            mainWindow.reload();
+          } 
+        }
+      ]
     },
     {
       label: 'Settings',
@@ -81,18 +97,6 @@ const createWindow = () => {
   if (isDev) {
     mainWindow.webContents.openDevTools({ mode: 'detach' });
   }
-
-  let timeout = null;
-
-  // Ask the renderer process to resize the main window
-  mainWindow.on('resize', () => {
-    if (!timeout) {
-      timeout = setTimeout(() => {
-        mainWindow.webContents.send('resize');
-        timeout = null;
-      }, 200)
-    }
-  });
 };
 
 // This method will be called when Electron has finished
